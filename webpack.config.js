@@ -17,14 +17,8 @@ module.exports = {
         path: resolve(CONFIG.outputDir),
         filename: '[name].js',
     },
+    
     mode: 'development',
-    devtool: 'eval-source-map',
-    optimization: {
-        splitChunks: {
-            chunks: 'all'
-        },
-        runtimeChunk: 'single'
-    },
 
     experiments: {
         asyncWebAssembly: true,
@@ -43,8 +37,6 @@ module.exports = {
     ],
 
     resolve: {
-        // See https://github.com/fable-compiler/Fable/issues/1490
-        // symlinks: false,
         // See https://github.com/cornerstonejs/cornerstone3D/issues/1071 (similar issue)
         alias: {
             "@cornerstonejs/core": "@cornerstonejs/core/dist/umd/index.js",
@@ -53,9 +45,7 @@ module.exports = {
     },
 
     devServer: {
-        historyApiFallback: {
-            index: '/'
-        },
+        webSocketServer: false,
         static: {
             directory: resolve(CONFIG.assetsDir)
         },

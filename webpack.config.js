@@ -26,21 +26,28 @@ module.exports = {
     },
 
     plugins: [
+        new webpack.DefinePlugin({
+            __BASE_PATH__: "''",
+        }),
         new HtmlWebpackPlugin({
             filename: 'index.html',
             template: resolve(CONFIG.indexHtmlTemplate)
         }),
         new CopyWebpackPlugin({
-            patterns: [{
-                from: resolve(CONFIG.assetsDir) }]
+            patterns: [
+                { from: resolve(CONFIG.assetsDir) },
+                {
+                    from: path.join(__dirname, 'node_modules', '@cornerstonejs/dicom-image-loader', 'dist/dynamic-import')
+                },
+            ]
         })
     ],
 
     resolve: {
-        // See https://github.com/cornerstonejs/cornerstone3D/issues/1071 (similar issue)
         alias: {
-            "@cornerstonejs/core": "@cornerstonejs/core/dist/umd/index.js",
-            "@cornerstonejs/tools": "@cornerstonejs/tools/dist/umd/index.js",
+            // "@cornerstonejs/core": "@cornerstonejs/core/dist/umd/index.js",
+            // "@cornerstonejs/tools": "@cornerstonejs/tools/dist/umd/index.js",
+            '@cornerstonejs/dicom-image-loader': '@cornerstonejs/dicom-image-loader/dist/dynamic-import/cornerstoneDICOMImageLoader.min.js',
         }
     },
 
@@ -52,8 +59,23 @@ module.exports = {
         host: '0.0.0.0',
         port: CONFIG.devServerPort,
         hot: true,
-        server: 'https'
-    }
+        server: 'https',
+        historyApiFallback: true,
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+            "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+        }
+    },
+
+    module: {
+        rules: [
+            {
+                test: /\.wasm$/,
+                type: 'asset/resource',
+            }
+        ],
+    },
 };
 
 function resolve(filePath) {

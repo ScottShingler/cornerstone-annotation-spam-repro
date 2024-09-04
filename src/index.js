@@ -2,11 +2,11 @@ import {
     RenderingEngine,
     Enums,
     init as csRenderInit,
-    getConfiguration,
-    getRenderingEngine
+    getConfiguration
 } from '@cornerstonejs/core';
 
 import * as cornerstone from '@cornerstonejs/core';
+
 import dicomParser from 'dicom-parser';
 
 import {
@@ -20,8 +20,6 @@ import {
 import cornerstoneDICOMImageLoader from '@cornerstonejs/dicom-image-loader';
 
 const { ViewportType } = Enums;
-
-global.getRenderingEngine = getRenderingEngine;
 
 function initCornerstoneDICOMImageLoader() {
     const { preferSizeOverAccuracy, useNorm16Texture } = getConfiguration().rendering;
@@ -55,60 +53,63 @@ function initCornerstoneDICOMImageLoader() {
     cornerstoneDICOMImageLoader.webWorkerManager.initialize(config);
 }
 
+const viewportId = 'myViewportn';
+const renderingEngineId = 'myRenderingEnginen';
+const toolGroupId = 'myToolGroupn';
+
 initCornerstoneDICOMImageLoader();
 await csRenderInit();
-await csToolsInit();
+csToolsInit();
 
 addTool(PanTool);
-
-const viewportId = 'myViewport';
-const renderingEngineId = 'myRenderingEngine';
-const toolGroupId = 'myToolGroup';
-
-const renderingEngine = new RenderingEngine(renderingEngineId);
 
 const toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
 toolGroup.addTool(PanTool.toolName);
 
-const test = () => {
-    const content = document.getElementById('cornerstone');
 
-    const element = document.createElement('div');
+// const imageIds = await createImageIdsAndCacheMetaData({
+//     StudyInstanceUID:
+//         '1.3.6.1.4.1.14519.5.2.1.7009.2403.334240657131972136850343327463',
+//     SeriesInstanceUID:
+//         '1.3.6.1.4.1.14519.5.2.1.7009.2403.226151125820845824875394858561',
+//     wadoRsRoot: 'https://d3t6nz73ql33tx.cloudfront.net/dicomweb',
+// });
 
-    // Disable the default context menu
-    element.oncontextmenu = (e) => e.preventDefault();
-    element.style.width = '500px';
-    element.style.height = '500px';
+const imageIds = ["wadouri:https://localhost:8080/test.dcm"];
 
-    content.appendChild(element);
+const content = document.getElementById('cornerstone');
 
-    element.oncontextmenu = (e) => e.preventDefault();
+const element = document.createElement('div');
 
-    const viewportInput = {
-        viewportId,
-        element,
-        type: ViewportType.STACK,
-    };
+// Disable the default context menu
+element.oncontextmenu = (e) => e.preventDefault();
+element.style.width = '500px';
+element.style.height = '500px';
 
-    renderingEngine.enableElement(viewportInput);
+content.appendChild(element);
 
-    const viewport = renderingEngine.getViewport(viewportId);
-    const imageId = "wadouri:https://localhost:8080/test.dcm"
+const renderingEngine = new RenderingEngine(renderingEngineId);
 
-    viewport.setStack([imageId], 0);
-    viewport.render();
+const viewportInput = {
+    viewportId,
+    element,
+    type: ViewportType.STACK,
+};
 
-    toolGroup.addViewport(viewportId, renderingEngineId);
-}
+renderingEngine.enableElement(viewportInput);
 
-global.enable_tool = () => {
-    toolGroup.setToolActive(PanTool.toolName, {
-        bindings: [
-            {
-                mouseButton: csToolsEnums.MouseBindings.Primary, // Left Click
-            },
-        ],
-    });
-}
+const viewport = renderingEngine.getViewport(viewportId);
 
-test();
+await viewport.setStack(imageIds, 0);
+viewport.render();
+
+toolGroup.addViewport(viewportId, renderingEngineId);
+
+toolGroup.setToolEnabled(PanTool.toolName);
+toolGroup.setToolActive(PanTool.toolName, {
+    bindings: [
+        {
+            mouseButton: csToolsEnums.MouseBindings.Primary, // Left Click
+        },
+    ],
+});

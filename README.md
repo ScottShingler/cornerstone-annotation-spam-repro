@@ -1,5 +1,4 @@
-> Tested with node version v18.12.1 (yarn 1.19.2)
-
+> Tested with node version v16.14.0 and v18.12.1
 
 To Run:
 1. `yarn install`
@@ -9,7 +8,7 @@ To Run:
 5. click `Enable Pan Tool`
 
 
-You should get teh following error:
+You should get the following error:
 ```
 index.js:1 Uncaught TypeError: Cannot read properties of undefined (reading 'renderViewport')
     at eval (index.js:1:391493)

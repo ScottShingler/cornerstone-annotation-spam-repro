@@ -12,7 +12,7 @@ import dicomParser from 'dicom-parser';
 import {
     addTool,
     ToolGroupManager,
-    PanTool,
+    CircleROITool,
     Enums as csToolsEnums,
     init as csToolsInit,
 } from '@cornerstonejs/tools';
@@ -53,60 +53,120 @@ function initCornerstoneDICOMImageLoader() {
     cornerstoneDICOMImageLoader.webWorkerManager.initialize(config);
 }
 
-const viewportId = 'myViewportn';
-const renderingEngineId = 'myRenderingEnginen';
-const toolGroupId = 'myToolGroupn';
+const viewport1Id = 'myViewport1';
+const renderingEngine1Id = 'myRenderingEngine1';
+const viewport2Id = 'myViewport2';
+const renderingEngine2Id = 'myRenderingEngine2';
+const toolGroupId = 'myToolGroup';
 
 initCornerstoneDICOMImageLoader();
 await csRenderInit();
 csToolsInit();
 
-addTool(PanTool);
+addTool(CircleROITool);
 
 const toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
-toolGroup.addTool(PanTool.toolName);
+toolGroup.addTool(CircleROITool.toolName);
 
+// Add images
+var imageIds = [];
+for(var i=1; i<=15; i++){
+    const response = await fetch('/1-' + String(i).padStart(3, '0') + '.dcm');
+    if (!response.ok) {
+        console.error('HTTP error ' + response.status);
+    }
+    const blob = await response.blob();
+    const imageId = cornerstoneDICOMImageLoader.wadouri.fileManager.add(blob);
+    imageIds.push(imageId);
+}
 
-// const imageIds = await createImageIdsAndCacheMetaData({
-//     StudyInstanceUID:
-//         '1.3.6.1.4.1.14519.5.2.1.7009.2403.334240657131972136850343327463',
-//     SeriesInstanceUID:
-//         '1.3.6.1.4.1.14519.5.2.1.7009.2403.226151125820845824875394858561',
-//     wadoRsRoot: 'https://d3t6nz73ql33tx.cloudfront.net/dicomweb',
-// });
-
-const imageIds = ["wadouri:https://localhost:8080/test.dcm"];
+// Print out the dicom IDs as the dicom loader creates them
+// They are all in the format dicom:<number>
+console.log(imageIds);
 
 const content = document.getElementById('cornerstone');
 
-const element = document.createElement('div');
+////////////////////
+//// Viewport 1 ////
+////////////////////
+
+const element1 = document.createElement('div');
 
 // Disable the default context menu
-element.oncontextmenu = (e) => e.preventDefault();
-element.style.width = '500px';
-element.style.height = '500px';
+element1.oncontextmenu = (e) => e.preventDefault();
+element1.style.width = '500px';
+element1.style.height = '500px';
+element1.style.margin = '1em';
+element1.style.float = 'left';
 
-content.appendChild(element);
+content.appendChild(element1);
 
-const renderingEngine = new RenderingEngine(renderingEngineId);
+const renderingEngine1 = new RenderingEngine(renderingEngine1Id);
 
-const viewportInput = {
-    viewportId,
-    element,
+const viewportInput1 = {
+    viewportId: viewport1Id,
+    element: element1,
     type: ViewportType.STACK,
 };
 
-renderingEngine.enableElement(viewportInput);
+renderingEngine1.enableElement(viewportInput1);
 
-const viewport = renderingEngine.getViewport(viewportId);
+const viewport1 = renderingEngine1.getViewport(viewport1Id);
 
-await viewport.setStack(imageIds, 0);
-viewport.render();
+// Add the images, and display image dicom:0
+await viewport1.setStack(imageIds, 0); // ⚠️ CHANGE CODE HERE TO SEE DIFFERENT IMAGES
 
-toolGroup.addViewport(viewportId, renderingEngineId);
+viewport1.render();
 
-toolGroup.setToolEnabled(PanTool.toolName);
-toolGroup.setToolActive(PanTool.toolName, {
+toolGroup.addViewport(viewport1Id, renderingEngine1Id);
+
+////////////////////
+//// Viewport 2 ////
+////////////////////
+
+const element2 = document.createElement('div');
+
+// Disable the default context menu
+element2.oncontextmenu = (e) => e.preventDefault();
+element2.style.width = '500px';
+element2.style.height = '500px';
+element2.style.margin = '1em';
+element2.style.float = 'left';
+
+content.appendChild(element2);
+
+const renderingEngine2 = new RenderingEngine(renderingEngine2Id);
+
+const viewportInput2 = {
+    viewportId: viewport2Id,
+    element: element2,
+    type: ViewportType.STACK,
+};
+
+renderingEngine2.enableElement(viewportInput2);
+
+const viewport2 = renderingEngine2.getViewport(viewport2Id);
+
+// Add the images, and display image dicom:10
+await viewport2.setStack(imageIds, 10); // ⚠️ CHANGE CODE HERE TO SEE DIFFERENT IMAGES
+
+viewport2.render();
+
+toolGroup.addViewport(viewport2Id, renderingEngine2Id);
+
+/////////////////////
+
+// Force a render when the annotation is created to fix a sync issue
+const forceRender = () => {
+    viewport1.render();
+    viewport2.render();
+}
+element2.addEventListener("mouseup", forceRender);
+element2.addEventListener("mouseup", forceRender);
+
+// Enable ROI tool
+toolGroup.setToolEnabled(CircleROITool.toolName);
+toolGroup.setToolActive(CircleROITool.toolName, {
     bindings: [
         {
             mouseButton: csToolsEnums.MouseBindings.Primary, // Left Click

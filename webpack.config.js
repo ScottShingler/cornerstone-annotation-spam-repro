@@ -45,8 +45,8 @@ module.exports = {
 
     resolve: {
         alias: {
-            // "@cornerstonejs/core": "@cornerstonejs/core/dist/umd/index.js",
-            // "@cornerstonejs/tools": "@cornerstonejs/tools/dist/umd/index.js",
+            "@cornerstonejs/core": "@cornerstonejs/core/dist/umd/index.js",
+            "@cornerstonejs/tools": "@cornerstonejs/tools/dist/umd/index.js",
             '@cornerstonejs/dicom-image-loader': '@cornerstonejs/dicom-image-loader/dist/dynamic-import/cornerstoneDICOMImageLoader.min.js',
         }
     },

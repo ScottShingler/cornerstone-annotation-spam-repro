@@ -13,9 +13,9 @@
     "webpack-dev-server": "^4.7.4"
   },
   "dependencies": {
-    "@cornerstonejs/core": "~1.77.13",
-    "@cornerstonejs/dicom-image-loader": "~1.77.13",
-    "@cornerstonejs/tools": "~1.77.13",
+    "@cornerstonejs/core": "~1.84.2",
+    "@cornerstonejs/dicom-image-loader": "~1.84.2",
+    "@cornerstonejs/tools": "~1.84.2",
     "dicom-parser": "1.8.21"
   }
 }

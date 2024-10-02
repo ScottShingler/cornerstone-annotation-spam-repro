@@ -2,7 +2,8 @@ import {
     RenderingEngine,
     Enums,
     init as csRenderInit,
-    getConfiguration
+    getConfiguration,
+    eventTarget,
 } from '@cornerstonejs/core';
 
 import * as cornerstone from '@cornerstonejs/core';
@@ -13,6 +14,10 @@ import {
     addTool,
     ToolGroupManager,
     CircleROITool,
+    PlanarFreehandROITool,
+    EllipticalROITool,
+    ArrowAnnotateTool,
+    LengthTool,
     Enums as csToolsEnums,
     init as csToolsInit,
 } from '@cornerstonejs/tools';
@@ -63,10 +68,21 @@ initCornerstoneDICOMImageLoader();
 await csRenderInit();
 csToolsInit();
 
-addTool(CircleROITool);
-
 const toolGroup = ToolGroupManager.createToolGroup(toolGroupId);
-toolGroup.addTool(CircleROITool.toolName);
+
+const tools = [
+    CircleROITool,
+    PlanarFreehandROITool,
+    EllipticalROITool,
+    ArrowAnnotateTool,
+    LengthTool
+];
+
+tools.forEach(tool => {
+    addTool(tool);
+    toolGroup.addTool(tool.toolName);
+    toolGroup.setToolEnabled(tool.toolName);
+});
 
 // Add images
 var imageIds = [];
@@ -148,28 +164,62 @@ renderingEngine2.enableElement(viewportInput2);
 const viewport2 = renderingEngine2.getViewport(viewport2Id);
 
 // Add the images, and display image dicom:10
-await viewport2.setStack(imageIds, 10); // ⚠️ CHANGE CODE HERE TO SEE DIFFERENT IMAGES
+await viewport2.setStack(imageIds, 0); // ⚠️ CHANGE CODE HERE TO SEE DIFFERENT IMAGES
 
 viewport2.render();
 
 toolGroup.addViewport(viewport2Id, renderingEngine2Id);
 
-/////////////////////
 
-// Force a render when the annotation is created to fix a sync issue
-const forceRender = () => {
-    viewport1.render();
-    viewport2.render();
+///////////////////////
+// Annotation events //
+///////////////////////
+
+const handleAnnotationEventModified = (event) => {
+    console.log(`ANNOTATION_MODIFIED: ${event.detail.viewportId} ${event.detail.annotation.annotationUID} ${event.detail.changeType}`);
+    
+    // We need to call render on the other viewport to cause the annotation to update there.
+    // ⚠️ Cornerstone BUG: If any part of the CircleROITool is placed outside the image, it will trigger
+    // extra ANNOTATION_MODIFIED events, causing an infinite loop.
+    // ⚠️ Cornerstone BUG: Drawing an open PlanarFreehandROITool shape will trigger extra ANNOTATION_MODIFIED events,
+    // causing an infinite loop.
+    if (event.detail.viewportId === viewport1Id) {
+        viewport2.render();
+    } else if (event.detail.viewportId === viewport2Id) {
+        viewport1.render();
+    }
 }
-element2.addEventListener("mouseup", forceRender);
-element2.addEventListener("mouseup", forceRender);
 
-// Enable ROI tool
-toolGroup.setToolEnabled(CircleROITool.toolName);
-toolGroup.setToolActive(CircleROITool.toolName, {
-    bindings: [
-        {
-            mouseButton: csToolsEnums.MouseBindings.Primary, // Left Click
-        },
-    ],
+eventTarget.addEventListener(csToolsEnums.Events.ANNOTATION_MODIFIED, handleAnnotationEventModified);
+
+tools.forEach(tool => {
+    toolGroup.setToolEnabled(tool.toolName);
 });
+
+
+/////////////////
+//// Buttons ////
+/////////////////
+
+const buttonContainer = document.createElement('div');
+
+tools.forEach(tool => {
+    const button = document.createElement('button');
+    button.style.margin = '0.5em';
+    button.innerText = `Activate ${tool.toolName}`;
+    button.onclick = () => {
+        tools.forEach(t => {
+            toolGroup.setToolEnabled(t.toolName);
+        });
+        toolGroup.setToolActive(tool.toolName, {
+            bindings: [
+                {
+                    mouseButton: csToolsEnums.MouseBindings.Primary,
+                },
+            ],
+        });
+    };
+    buttonContainer.appendChild(button);
+});
+
+content.appendChild(buttonContainer);

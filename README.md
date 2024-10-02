@@ -1,4 +1,4 @@
-> Tested with node version v16.14.0 and v18.12.1
+> Tested with node v18.20.3
 
 #### Instructions
 
@@ -6,14 +6,29 @@ To Run:
 1. `yarn install`
 2. `npm run build`
 3. `npx webpack serve`
-4. go to https://localhost:8080
-5. create a circle ROI on each viewport
+4. Go to https://localhost:8080
+5. Open developer tools (F12) and switch to the console view
 
-#### Issue
+#### Issue #1 - CircleROITool
 
-Expected behaviour: One viewport is displaying image 0, the other is displaying image 10, so each annotation should be created on one viewport and not the other
+1. Click the **Activate CircleROI** button
+2. Draw a circle on either viewport
+3. Move the circle outside the image into the black area
+4. Observe messages in the console
 
-Actual behaviour: Annotations created on image `dicom:0` only display on the viewport displaying image `dicom:0`, however annotations created on image `dicom:10` display on both the viewport displaying image `dicom:10` and the viewport displaying image `dicom:0`.
+Expected behaviour: ANNOTATION_UPDATED events should only be triggered when moving or resizing the annotation.
+
+Actual behaviour: Extra ANNOTATION_MODIFIED events are triggered when the annotation is at rest when any part of it outside the image.
+
+#### Issue #2 - PlanarFreehandROITool
+
+1. Click the **Activate PlanarFreehandROI** button
+2. Draw an **open** contour within the image
+3. Observe messages in the console
+
+Expected behaviour: ANNOTATION_UPDATED events should only be triggered while drawing the annotation.
+
+Actual behaviour: Extra ANNOTATION_MODIFIED events are triggered when the annotation is completed.
 
 #### Credits
 

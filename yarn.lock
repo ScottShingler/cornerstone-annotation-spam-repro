@@ -29,10 +29,10 @@
   resolved "https://registry.yarnpkg.com/@cornerstonejs/codec-openjph/-/codec-openjph-2.4.5.tgz#8690b61a86fa53ef38a70eee9d665a79229517c0"
   integrity sha512-MZCUy8VG0VG5Nl1l58+g+kH3LujAzLYTfJqkwpWI2gjSrGXnP6lgwyy4GmPRZWVoS40/B1LDNALK905cNWm+sg==
 
-"@cornerstonejs/core@^1.84.2", "@cornerstonejs/core@~1.84.2":
-  version "1.84.2"
-  resolved "https://registry.yarnpkg.com/@cornerstonejs/core/-/core-1.84.2.tgz#22ceeb054513bb2e06be1169fd60e09e29191ce2"
-  integrity sha512-jW5xcaAluXg2xapY953IoVCOM76GoAOF1D9SPAJVXxCxY08ilWzvsX9FsgGEpQ9LiCltR8+wG7EGdHtOpm5kxA==
+"@cornerstonejs/core@^1.86.0", "@cornerstonejs/core@~1.86.0":
+  version "1.86.0"
+  resolved "https://registry.yarnpkg.com/@cornerstonejs/core/-/core-1.86.0.tgz#19f94b8a4d37ffbd775b82f3963af5fbe38709de"
+  integrity sha512-yY3TC5abtU4hgcyBONQo+S0MXYgRyWzV/8bWujXilugAj5moDakex/zMc+YGIKlp4PvQBBRFjbu0H8YW3pseSw==
   dependencies:
     "@kitware/vtk.js" "30.4.1"
     comlink "^4.4.1"
@@ -40,26 +40,26 @@
     gl-matrix "^3.4.3"
     lodash.clonedeep "4.5.0"
 
-"@cornerstonejs/dicom-image-loader@~1.84.2":
-  version "1.84.2"
-  resolved "https://registry.yarnpkg.com/@cornerstonejs/dicom-image-loader/-/dicom-image-loader-1.84.2.tgz#35f685fdf281a96da42bdf513be6ee75af754a47"
-  integrity sha512-ug5J7AELPPoLMzzhtHy7qLNkNwknWbr02GBKMiCtC5T8dfpRaYvr2hNUW2rrH5wOjaVGlTSh7M/jH7UFm8AMgg==
+"@cornerstonejs/dicom-image-loader@~1.86.0":
+  version "1.86.0"
+  resolved "https://registry.yarnpkg.com/@cornerstonejs/dicom-image-loader/-/dicom-image-loader-1.86.0.tgz#19a529bf1e5d27a0a6a9d0994068b12dab5e88dc"
+  integrity sha512-OPZCGdtdomj3TGktATQcLVIpTVv7ZqF8EyPgkEX+eIRXILzpu5Nm6gf3Lwofa5HVFwvmoJmVnU8jToKcoKPkqQ==
   dependencies:
     "@cornerstonejs/codec-charls" "^1.2.3"
     "@cornerstonejs/codec-libjpeg-turbo-8bit" "^1.2.2"
     "@cornerstonejs/codec-openjpeg" "^1.2.2"
     "@cornerstonejs/codec-openjph" "^2.4.5"
-    "@cornerstonejs/core" "^1.84.2"
+    "@cornerstonejs/core" "^1.86.0"
     dicom-parser "^1.8.9"
     pako "^2.0.4"
     uuid "^9.0.0"
 
-"@cornerstonejs/tools@~1.84.2":
-  version "1.84.2"
-  resolved "https://registry.yarnpkg.com/@cornerstonejs/tools/-/tools-1.84.2.tgz#5e0f629fa906cd6298cd7d489f2187ee3a7c8ea4"
-  integrity sha512-Z5GLUK31eeUbnvRyvZ+Vk4hfCeH4Or+rTphidZi7+1xBaFJa9UeCHKTUNDXR99fLDyUp8sQ7wlDpPUSJVtEtiw==
+"@cornerstonejs/tools@~1.86.0":
+  version "1.86.0"
+  resolved "https://registry.yarnpkg.com/@cornerstonejs/tools/-/tools-1.86.0.tgz#ab7ca218faea4c6354866e02bcdf8005282d161c"
+  integrity sha512-yyy7r9Vo0NrTYYeKQtVqpbLRrVaequd9Q6aU2ifiNusdi6w+8Xslh1U/AHfw2Y9fueK8JBkLnKL+o/nLfdaOuQ==
   dependencies:
-    "@cornerstonejs/core" "^1.84.2"
+    "@cornerstonejs/core" "^1.86.0"
     "@icr/polyseg-wasm" "0.4.0"
     "@types/offscreencanvas" "2019.7.3"
     comlink "^4.4.1"
@@ -283,9 +283,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "22.5.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.5.3.tgz#91a374e42c6e7ccb5893a87f1775f36ce1671d65"
-  integrity sha512-njripolh85IA9SQGTAqbmnNZTdxv7X/4OYGPz8tgy5JDr8MP+uDBa921GpYEoDDnwm0Hmn5ZPeJgiiSTPoOzkQ==
+  version "22.7.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.7.4.tgz#e35d6f48dca3255ce44256ddc05dee1c23353fcc"
+  integrity sha512-y+NPi1rFzDs1NdQHHToqeiX2TIS79SWEAw9GYhkkx8bD0ChpfqC+n2j5OXOCpzfojBEBt6DnEnnG9MY0zk1XLg==
   dependencies:
     undici-types "~6.19.2"
 
@@ -971,9 +971,9 @@ destroy@1.2.0:
   integrity sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==
 
 detect-gpu@^5.0.22:
-  version "5.0.46"
-  resolved "https://registry.yarnpkg.com/detect-gpu/-/detect-gpu-5.0.46.tgz#0b138b2e359d41da639d5e9dd80fd75c2671561a"
-  integrity sha512-aulQlEJDVAADo2j4ZkcEu/mtuX9dz104w7uIDa52/ntcKdOEM8aI+k91Wv4x0o+Gds4Nbd2Sds0Uaqp1ZuLLJw==
+  version "5.0.50"
+  resolved "https://registry.yarnpkg.com/detect-gpu/-/detect-gpu-5.0.50.tgz#68ccda80fcda7a80a10d41f9aba46a828069a3b4"
+  integrity sha512-Bzuv0ZTC9AqIVwoWqtBJW91rNR9vT5F5DeIEb6x82WZC55848i9FFyRR+kswCuW3IfCtMNyiIxRuL2EWlF4Ihw==
   dependencies:
     webgl-constants "^1.1.1"
 
